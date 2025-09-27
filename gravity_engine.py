@@ -660,7 +660,7 @@ class Game:
         heaviest_tuple = self.heaviest()
 
         if heaviest_tuple is not None:
-            text = f"Corps le plus lourd : n°{heaviest_tuple[0]} -> {int(heaviest_tuple[1] / 1000):.2e} t"
+            text = f"Corps le plus lourd : n°{heaviest_tuple[0]} -> {heaviest_tuple[1] / 1000:.2e} t"
             self.write(text, (20, y), BLUE, 2)
         else:
             text = f"Corps le plus lourd : n°Aucun"
