@@ -902,7 +902,7 @@ class Game:
 
                         if can_create_circle:
                             temp_circle = Circle(x, y, 3, 1)
-                            #can_create_circle = False  <- useless
+                            #can_create_circle = False  # <- useless
                     else:
                         temp_circle = Circle(x, y, 3, 1)
 
