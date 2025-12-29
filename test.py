@@ -147,7 +147,7 @@ class Text:
 # class Circle
 # -----------------
 class Circle:
-    def __init__(self, x, y, rayon, mass):
+    def __init__(self, x, y, radius, mass):
         super().__init__()
 
         self.pos = None
@@ -162,11 +162,11 @@ class Circle:
         self.basic_mass = mass
         self.mass = self.basic_mass
 
-        self.rayon = rayon
-        self.rayon = self.mass ** (1 / 3)
+        self.radius = radius
+        self.radius = self.mass ** (1 / 3)
 
-        self.surface = 4 * self.rayon ** 2 * math.pi
-        self.volume = 4 / 3 * math.pi * self.rayon ** 3
+        self.surface = 4 * self.radius ** 2 * math.pi
+        self.volume = 4 / 3 * math.pi * self.radius ** 3
 
         self.rect = None
 
@@ -224,13 +224,13 @@ class Circle:
                 self.y = 0.0
                 print(f"WARNING: Circle {self.number} had invalid y coordinate, reset to 0")
 
-        if not isinstance(self.rayon, (int, float)):
+        if not isinstance(self.radius, (int, float)):
             # Si c'est une liste/tuple, prendre le premier élément
-            if isinstance(self.rayon, (list, tuple)) and len(self.rayon) > 0:
-                self.rayon = float(self.rayon[0])
+            if isinstance(self.radius, (list, tuple)) and len(self.radius) > 0:
+                self.radius = float(self.radius[0])
             else:
                 # Sinon, utiliser une valeur par défaut
-                self.rayon = 1.0
+                self.radius = 1.0
                 print(f"WARNING: Circle {self.number} had invalid radius, reset to 1")
         # ----------------
 
@@ -246,23 +246,23 @@ class Circle:
                     self.color = BLACK
         else:
             if self.is_selected:
-                if self.rayon <= 4:
-                    pygame.draw.circle(screen, DUCKY_GREEN, (int(self.x), int(self.y)), int(self.rayon) + 1 + 1)
-                elif self.rayon <= 20:
+                if self.radius <= 4:
+                    pygame.draw.circle(screen, DUCKY_GREEN, (int(self.x), int(self.y)), int(self.radius) + 1 + 1)
+                elif self.radius <= 20:
                     pygame.draw.circle(screen, DUCKY_GREEN, (int(self.x), int(self.y)),
-                                       int(self.rayon) + self.rayon / 4 + 1)
+                                       int(self.radius) + self.radius / 4 + 1)
                 else:
-                    pygame.draw.circle(screen, DUCKY_GREEN, (int(self.x), int(self.y)), int(self.rayon) + 4 + 1)
+                    pygame.draw.circle(screen, DUCKY_GREEN, (int(self.x), int(self.y)), int(self.radius) + 4 + 1)
 
         if not self.is_selected:
-            if self.rayon <= 4:
-                pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)), int(self.rayon) + 1)
-            elif self.rayon <= 20:
-                pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)), int(self.rayon) + self.rayon / 5)
+            if self.radius <= 4:
+                pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)), int(self.radius) + 1)
+            elif self.radius <= 20:
+                pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)), int(self.radius) + self.radius / 5)
             else:
-                pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)), int(self.rayon) + 3)
+                pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)), int(self.radius) + 3)
 
-        self.rect = pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), int(self.rayon))
+        self.rect = pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), int(self.radius))
 
         """
         Debug tool:
@@ -360,7 +360,7 @@ class Circle:
         text = f"Masse : {self.mass:.2e} t"
         game.write(text, (20, y - 20), BLUE, 3)
 
-        text = f"Rayon : {round(self.rayon * 10) / 10} m"
+        text = f"Rayon : {round(self.radius * 10) / 10} m"
         game.write(text, (20, y - 20), BLUE, 4)
 
         text = f"Volume : {self.volume:.2e} m³"
@@ -395,7 +395,7 @@ class Circle:
 
         distance = float(rac2((dx ** 2) + (dy ** 2)))
 
-        if distance <= self.rayon + other.rayon:
+        if distance <= self.radius + other.radius:
             return 0, 0
 
         # force = game.gravity * ((self.mass * 1_000_000 * other.mass * 1_000_000) / (distance ** 2)) / 100
@@ -455,8 +455,8 @@ class Circle:
         if self.birthday is not None:
             self.age = game.net_age() - self.birthday
 
-        self.surface = 4 * self.rayon ** 2 * math.pi
-        self.volume = 4 / 3 * math.pi * self.rayon ** 3
+        self.surface = 4 * self.radius ** 2 * math.pi
+        self.volume = 4 / 3 * math.pi * self.radius ** 3
 
         if not self in circles:
             self.is_selected = False
@@ -476,7 +476,7 @@ class Circle:
         distance = float(rac2((dx ** 2) + (dy ** 2)))
 
         if game.fusions:
-            if self.mass >= other.mass and distance <= self.rayon:
+            if self.mass >= other.mass and distance <= self.radius:
                 self.fusion(other)
 
     def fusion(self, other):
@@ -487,7 +487,7 @@ class Circle:
         self.vy = (self.vy * self.mass + other.vy * other.mass) / (self.mass + other.mass)
 
         self.mass = self.mass + other.mass
-        self.rayon = rac3(self.mass)
+        self.radius = rac3(self.mass)
 
         other.suicide = True
 
@@ -498,7 +498,7 @@ class Circle:
         # Pythagore
         distance = rac2((dx ** 2) + (dy ** 2))
 
-        return distance < self.rayon + other.rayon
+        return distance < self.radius + other.radius
 
 
 # -----------------
@@ -794,7 +794,7 @@ class Game:
         for c in range(count):
             new = Circle(x=random.uniform(0, self.screen.get_width()),
                          y=random.uniform(0, self.screen.get_height()),
-                         rayon=0.1,
+                         radius=0.1,
                          mass=1)
             circles.append(new)
 
@@ -952,8 +952,8 @@ class Game:
                             circles.remove(circle)
 
             if mouse_down and temp_circle:
-                temp_circle.rayon += self.growing_speed * 100 * (1 / self.frequency)
-                temp_circle.mass = temp_circle.rayon ** 3
+                temp_circle.radius += self.growing_speed * 100 * (1 / self.frequency)
+                temp_circle.mass = temp_circle.radius ** 3
                 collision_detected = False
                 for circle in circles:
                     if temp_circle.is_colliding_with(circle):

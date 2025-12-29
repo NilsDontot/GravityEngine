@@ -12,7 +12,6 @@ Touches:
     - Suppr -> Supprimer un corps selectionné
 """
 
-
 # import ensurepip
 import importlib.util
 import random
@@ -38,7 +37,7 @@ Les parametre sont modulables des lignes 437 à 480.
 Les commandes y sont indiquées.
 
 To-do : 
-    - corriger random_mode
+    - corriger les unités et formules
 
 
 ### ajouter limite de roche
@@ -86,7 +85,7 @@ class Camera:
         super().__init__()
 
         self.zoom = 1
-        self.pos: list[float] = [0, 0]
+        self.pos: tuple[float, float] = (0, 0)
 
         self.zoom_speed = zoom_speed
         self.moving_speed = moving_speed
@@ -157,14 +156,14 @@ class Circle:
         game.circle_number += 1
         self.number: int = game.circle_number
 
-        self.x: float = float(x) if x is not None else 0.0
-        self.y: float = float(y) if y is not None else 0.0
+        self.x = float(x)
+        self.y = float(y)
 
         self.basic_mass = mass
         self.mass = self.basic_mass
 
         self.radius = radius
-        self.radiusn = self.mass ** (1 / 3)
+        self.radius = self.mass ** (1 / 3)
 
         self.surface = 4 * self.radius ** 2 * math.pi
         self.volume = 4 / 3 * math.pi * self.radius ** 3
@@ -235,8 +234,8 @@ class Circle:
                 print(f"WARNING: Circle {self.number} had invalid radius, reset to 1")
         # ----------------
 
-        print(self.x, self.y, f"[{type((self.x, self.y))}]")
-
+        #print(self.x, self.y, f"[{type((self.x, self.y))}]")
+        
         if self.full_selected_mode:
             if self.is_selected:
                 self.color = DUCKY_GREEN
@@ -345,6 +344,7 @@ class Circle:
         draw_line(self.CSVy_color, (self.x, y1), (self.x, y2), self.vector_width)
 
     def print_info(self, y: int):
+        text = ""
         pygame.draw.rect(game.screen, BLUE, (20, y, 340, 5))
 
         text = f"ID : {self.number}"
@@ -480,11 +480,11 @@ class Circle:
                 self.fusion(other)
 
     def fusion(self, other):
-        self.x = float((self.x * self.mass + other.x * other.mass) / (self.mass + other.mass))
-        self.y = float((self.y * self.mass + other.y * other.mass) / (self.mass + other.mass))
+        self.x = (self.x * self.mass + other.x * other.mass) / (self.mass + other.mass)
+        self.y = (self.y * self.mass + other.y * other.mass) / (self.mass + other.mass)
 
-        self.vx = float((self.vx * self.mass + other.vx * other.mass) / (self.mass + other.mass))
-        self.vy = float((self.vy * self.mass + other.vy * other.mass) / (self.mass + other.mass))
+        self.vx = (self.vx * self.mass + other.vx * other.mass) / (self.mass + other.mass)
+        self.vy = (self.vy * self.mass + other.vy * other.mass) / (self.mass + other.mass)
 
         self.mass = self.mass + other.mass
         self.radius = rac3(self.mass)
@@ -498,7 +498,7 @@ class Circle:
         # Pythagore
         distance = rac2((dx ** 2) + (dy ** 2))
 
-        return distance <= self.radius + other.radius
+        return distance < self.radius + other.radius
 
 
 # -----------------
@@ -700,6 +700,8 @@ class Game:
         return None
 
     def print_global_info(self, y):
+        text = ""
+
         heaviest_tuple = self.heaviest()
 
         if heaviest_tuple is not None:
@@ -902,7 +904,7 @@ class Game:
 
                         if can_create_circle:
                             temp_circle = Circle(x, y, 3, 1)
-                            #can_create_circle = False  # <- useless
+                            can_create_circle = False
                     else:
                         temp_circle = Circle(x, y, 3, 1)
 
@@ -1022,7 +1024,7 @@ class Game:
 
 
 # -----------------
-# Engine
+# Starting
 # -----------------
 if __name__ == '__main__':
     pygame.init()
