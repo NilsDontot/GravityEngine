@@ -499,7 +499,7 @@ class Game:
         WIDTH: int = 0  # } <- seulement dans le cas ou FULLSCREEN est desactive
         HEIGHT: int = 0  # }
 
-        self.used_font = 'font.ttf'  # <- fichier en .ttf pour la police d'ecriture
+        self.used_font = 'assets/font.ttf'  # <- fichier en .ttf pour la police d'ecriture
 
         self.FPS = 120
 
@@ -509,7 +509,7 @@ class Game:
         self.speed = 1_000_000_00
         self.growing_speed = 0.5
 
-        self.screen_mode: str = "dark"
+        self.screen_mode: str = "dark" # light or dark
         self.music = False
         self.fusions = True
 
@@ -573,7 +573,14 @@ class Game:
 
         self.counter = 0
 
-        self.KEY_ACTIONS = {} # defini dans la boucle principale
+        self.INPUT_MAP = {} # defini dans la boucle principale
+        self.MOUSEBUTTON_MAP = {} # defini dans la boucle principale
+
+        self.can_create_circle = True
+        self.circle_collided = False
+        self.mouse_down = False
+        self.temp_circle: Circle
+        self.collision_detected = False
 
     def handle_input(self, event: pygame.event.Event = None) -> None:
         if event.type is pygame.KEYDOWN:
@@ -788,14 +795,14 @@ class Game:
         global circles
         circles = []
 
-        temp_circle = None
-        mouse_down = False
+        self.temp_circle = None
+        self.mouse_down = False
 
         clock = pygame.time.Clock()
 
         self.circle_selected = False
 
-        self.KEY_ACTIONS = {
+        self.KEY_MAP = {
                 pygame.K_SPACE: ActionManager.toggle_pause,
                 pygame.K_v: ActionManager.toggle_vectors_printed,
                 pygame.K_r: ActionManager.toggle_random_mode,
@@ -803,6 +810,10 @@ class Game:
                 pygame.K_p: self.generate_environment,
                 pygame.K_DELETE: ActionManager.delete_selected_circle,
                 pygame.K_ESCAPE: ActionManager.quit_game,
+            }
+        self.MOUSEBUTTON_MAP = {
+                pygame.MOUSEBUTTONDOWN: ActionManager.handle_mouse_button_down,
+                pygame.MOUSEBUTTONUP: ActionManager.handle_mouse_button_up,
             }
 
         running = True
@@ -845,9 +856,9 @@ class Game:
 
             if not pygame.mixer.music.get_busy() and self.music is True:
                 try:
-                    pygame.mixer.music.load('music1.mp3')
-                    pygame.mixer.music.queue('music2.mp3')
-                    pygame.mixer.music.queue('music3.mp3')
+                    pygame.mixer.music.load('assets/music1.mp3')
+                    pygame.mixer.music.queue('assets/music2.mp3')
+                    pygame.mixer.music.queue('assets/music3.mp3')
                 except FileNotFoundError:
                     pass
 
@@ -856,66 +867,33 @@ class Game:
             for event in pygame.event.get():
                 self.handle_input(event)
                 if event.type == pygame.QUIT:
-                    running = False
+                    ActionManager.quit_game()
 
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    circle_collided = None
-                    can_create_circle = False
-                    mouse_down = True
-                    x, y = pygame.mouse.get_pos()
-                    if len(circles) > 0:
-                        for circle in circles:
-                            if circle.rect is not None:
-                                if circle.rect.collidepoint(event.pos):
-                                    circle_collided = circle.number
-                                    for c in circles:
-                                        if c != circle:
-                                            c.is_selected = False
-                                    break
-
-                        if circle_collided is not None:
-                            for circle in circles:
-                                if circle.number == circle_collided:
-                                    circle.switch_selection()
-                                    break
-
-                        elif self.circle_selected:
-                            for circle in circles:
-                                circle.is_selected = False
-                        else:
-                            can_create_circle = True
-
-                        if can_create_circle:
-                            temp_circle = Circle(x, y, 3, 1)
-                            can_create_circle = False
-                    else:
-                        temp_circle = Circle(x, y, 3, 1)
-
-                elif event.type == pygame.MOUSEBUTTONUP:
-                    mouse_down = False
-                    if temp_circle is not None:
-                        circles.append(temp_circle)
-                        temp_circle = None
+                elif event.type in self.MOUSEBUTTON_MAP:
+                    action = self.MOUSEBUTTON_MAP.get(event.type)
+                    if action:
+                        action(event)
 
                 # clavier
                 elif event.type == pygame.KEYDOWN:
-                    action = self.KEY_ACTIONS.get(event.key)
+                    action = self.KEY_MAP.get(event.key)
                     if action:
                         action()     
 
-            if mouse_down and temp_circle:
-                temp_circle.radius += self.growing_speed * 100 * (1 / self.frequency)
-                temp_circle.mass = temp_circle.radius ** 3
-                collision_detected = False
+            # suite du pygame.MOUSEBUTTONDOWN
+            if self.mouse_down and self.temp_circle:
+                self.temp_circle.radius += self.growing_speed * 100 * (1 / self.frequency)
+                self.temp_circle.mass = self.temp_circle.radius ** 3
+                self.collision_detected = False
                 for circle in circles:
-                    if temp_circle.is_colliding_with(circle):
-                        collision_detected = True
+                    if self.temp_circle.is_colliding_with(circle):
+                        self.collision_detected = True
                         break
 
-                if collision_detected:
-                    circles.append(temp_circle)
-                    temp_circle = None
-                    mouse_down = False
+                if self.collision_detected:
+                    circles.append(self.temp_circle)
+                    self.temp_circle = None
+                    self.mouse_down = False
 
             for circle in circles:
                 if circle.suicide is True:
@@ -955,8 +933,8 @@ class Game:
                 for circle in circles:
                     circle.draw(self.screen)
 
-            if temp_circle:
-                temp_circle.draw(self.screen)
+            if self.temp_circle:
+                self.temp_circle.draw(self.screen)
             # print(f"Affichage : {time.time() - now}")
 
             self.print_global_info(self.info_y)
@@ -968,8 +946,7 @@ class Game:
             pygame.display.flip()
             clock.tick(self.FPS)
 
-        pygame.quit()
-        sys.exit('See you soon !')
+        ActionManager.quit_game()
 
 
 class ActionManager:
@@ -1002,9 +979,9 @@ class ActionManager:
             game.vectors_printed = True
 
     @staticmethod
-    def quit_game():
+    def quit_game(text: str = "See you soon !"):
         pygame.quit()
-        sys.exit('See you soon !')
+        sys.exit(text)
 
     @staticmethod
     def delete_selected_circle():
@@ -1012,6 +989,52 @@ class ActionManager:
             if circle.is_selected:
                 circles.remove(circle)
                 break
+    
+    @staticmethod
+    def handle_mouse_button_down(event: pygame.event):
+        game.circle_collided = None
+        game.can_create_circle = False
+        game.mouse_down = True
+        x, y = pygame.mouse.get_pos()
+        if len(circles) > 0:
+            for circle in circles:
+                if circle.rect is not None:
+                    if circle.rect.collidepoint(event.pos):
+                        game.circle_collided = circle.number
+                        for c in circles:
+                            if c != circle:
+                                c.is_selected = False
+                            break
+
+            if game.circle_collided is not None:
+                for circle in circles:
+                    if circle.number == game.circle_collided:
+                        circle.switch_selection()
+                        break
+
+            elif game.circle_selected:
+                for circle in circles:
+                    circle.is_selected = False
+            else:
+                game.can_create_circle = True
+
+            if game.can_create_circle:
+                game.temp_circle = Circle(x, y, 3, 1)
+                game.can_create_circle = False
+        else:
+            game.temp_circle = Circle(x, y, 3, 1)
+
+    @staticmethod
+    def handle_mouse_button_up(event: pygame.event):
+        game.mouse_down = False
+        if game.temp_circle is not None:
+            circles.append(game.temp_circle)
+            game.temp_circle = None
+
+
+class Utils:
+    def function(args):
+        pass
 
 
 # -----------------
