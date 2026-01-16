@@ -524,7 +524,7 @@ class Game:
 
         self.random_environment_number: int = 20
 
-        self.random_field = 10 ** -17  # <- en TJoules
+        self.random_field = 10 ** -17  # <- en kJoules
         # }
 
         self.info = pygame.display.Info()
@@ -727,7 +727,7 @@ class Game:
         text = f"Structure aléatoire ({self.random_environment_number} corps) : P"
         self.write(text, (self.screen.get_width() - 20 - (self.font.size(text)[0]), y), BLUE, 4)
 
-        text = f"Accéleration : ×{self.speed:.2e}"
+        text = f"Facteur temps : ×{self.speed:.2e}"
         self.write(text, (self.screen.get_width() - 20 - (self.font.size(text)[0]),
                           self.screen.get_height() - 20 - 2 * self.txt_size - self.txt_gap), BLUE, 0)
 
@@ -949,6 +949,9 @@ class Game:
         ActionManager.quit_game()
 
 
+# -----------------
+# class ActionManager
+# -----------------
 class ActionManager:
     @staticmethod
     def toggle_pause():
@@ -1032,9 +1035,11 @@ class ActionManager:
             game.temp_circle = None
 
 
+# -----------------
+# class Utils
+# -----------------
 class Utils:
-    def function(args):
-        pass
+    pass
 
 
 # -----------------

@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['C:\\Users\\donto\\Documents\\Projects\\Programming\\GravityEngine\\gravity_engine.py'],
+    ['C:\\Users\\donto\\Documents\\Projects\\Programming\\GravityEngine\\src\\gravity_engine.py'],
     pathex=[],
     binaries=[],
     datas=[],

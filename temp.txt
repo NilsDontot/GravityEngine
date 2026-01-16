@@ -1,3 +1,0 @@
-can_create_circle = True
-circle_collided = False
-mouse_down = False
