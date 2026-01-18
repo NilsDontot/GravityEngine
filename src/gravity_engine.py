@@ -697,6 +697,16 @@ class Engine:
         self.save_time_2 = time.time()
         return latency
 
+    def handle_music(self, loop: int = 0, start: float = 0, fade_ms: int = 0):
+        if not pygame.mixer.music.get_busy() and self.music is True:
+                try:
+                    pygame.mixer.music.load('assets/music1.mp3')
+                    pygame.mixer.music.queue('assets/music2.mp3')
+                    pygame.mixer.music.queue('assets/music3.mp3')
+                except FileNotFoundError:
+                    pass
+                pygame.mixer.music.play(loop, start, fade_ms)
+
     # noinspection PyGlobalUndefined
     def run(self):
         pygame.mixer.music.set_volume(self.music_volume)
@@ -758,15 +768,7 @@ class Engine:
                 else:
                     self.circle_selected = False
 
-            if not pygame.mixer.music.get_busy() and self.music is True:
-                try:
-                    pygame.mixer.music.load('assets/music1.mp3')
-                    pygame.mixer.music.queue('assets/music2.mp3')
-                    pygame.mixer.music.queue('assets/music3.mp3')
-                except FileNotFoundError:
-                    pass
-
-                pygame.mixer.music.play(0, 0, 1)
+            self.handle_music()
 
             for event in pygame.event.get():
                 self.handle_input(event)
