@@ -37,7 +37,7 @@ Gravity Engine is an interactive physics simulation that allows you to create an
 
 **Developed by Nils DONTOT** - [GitHub Profile](https://github.com/NilsDontot)
 
-![Gravity Engine Demo](assets/demo.gif) *(A demo gif will be added)*
+![Gravity Engine Demo](assets/demo.gif) *(A demo gif will soon be added)*
 
 ## ✨ Features
 
