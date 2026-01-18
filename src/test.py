@@ -11,7 +11,7 @@ Touches:
     - Suppr -> Supprimer un corps selectionné
 """
 
-#import ensurepip
+
 import importlib.util
 import random
 import subprocess
@@ -22,8 +22,6 @@ import sys
 from math import *
 
 required_moduls: set[str] = {'pygame'}
-
-#ensurepip.bootstrap()
 
 for modul in required_moduls:
     if importlib.util.find_spec(modul) is None:
@@ -38,6 +36,9 @@ Les commandes y sont indiquées.
 To-do : 
     - corriger les unités et formules
     - remplire Utils
+
+Idées :
+    - trasfere de masse lorsque collision sans fusion
     - reflechir au systeme de quadtree pour les forces
 
 ### ajouter limite de roche
