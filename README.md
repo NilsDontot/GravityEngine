@@ -129,7 +129,7 @@ GravityEngine/
 |------|-------------|----------|
 | `src/main.py` | Main simulation program | ✅ Required |
 | `assets/font.ttf` | UI font file | ✅ Required |
-| `assets/music*.mp3` | Background music files | ⚠️ Optional (only if music enabled) |
+| `assets/music*.mp3` | Background music files | 🚫 Feature under development |
 | `README.md` | Documentation | 📖 Recommended |
 | `ROADMAP.md` | Development timeline | 📖 Recommended |
 | `LICENSE` | License terms | ⚖️ Legal |
