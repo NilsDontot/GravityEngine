@@ -30,9 +30,6 @@ for modul in REQUIRED_MODULES:
 import pygame
 
 """
-Les parametre sont modulables des lignes 437 à 480.
-Les commandes y sont indiquées.
-
 To-do : 
     - corriger les unités et formules
     - remplacer l'affichage en pixel par des fractions d'ecran
