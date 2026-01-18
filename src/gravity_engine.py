@@ -21,9 +21,9 @@ import sys
 
 from math import *
 
-required_moduls: set[str] = {'pygame'}
+REQUIRED_MODULES: set[str] = {'pygame'}
 
-for modul in required_moduls:
+for modul in REQUIRED_MODULES:
     if importlib.util.find_spec(modul) is None:
         subprocess.check_call([sys.executable, "-m", "pip", "install", modul])
 
@@ -46,51 +46,18 @@ Idées :
 
 
 # -----------------
-# class Camera
-# -----------------
-class Camera:
-    def __init__(self, zoom_speed, moving_speed):
-        super().__init__()
-
-        self.zoom = 1
-        self.pos: tuple[float, float] = (0, 0)
-
-        self.zoom_speed = zoom_speed
-        self.moving_speed = moving_speed
-
-    def update_data(self):
-        if pygame.K_a in engine.inputs:
-            self.zoom -= self.zoom_speed
-
-        if pygame.K_e in engine.inputs:
-            self.zoom += self.zoom_speed
-
-        # arrows
-        if pygame.K_LEFT in engine.inputs:
-            self.pos[0] -= self.moving_speed
-
-        if pygame.K_RIGHT in engine.inputs:
-            self.pos[0] += self.moving_speed
-
-        if pygame.K_UP in engine.inputs:
-            self.pos[1] -= self.moving_speed
-
-        if pygame.K_DOWN in engine.inputs:
-            self.pos[1] += self.moving_speed
-
-    def update_visual(self):
-        self.update_data()
-
-
-# -----------------
 # class Text
 # -----------------
-class Text:
+class TempText:
     def __init__(self, text: str = "", duration: float = 1, dest: tuple[float, float] = (0, 0), line: int = 0,
                  color: tuple[int, int, int] | tuple[int, int, int, int] = (10, 124, 235)):
+        """
+        Used to display a temporary text on the screen.
+        It is automatically removed from the list when the duration is over.
+        """
         super().__init__()
 
-        engine.texts.append(self)
+        engine.temp_texts.append(self)
 
         self.birthday = time.time()
 
@@ -100,15 +67,20 @@ class Text:
         self.x = dest[0]
         self.y = dest[1] + line * (engine.txt_gap + engine.txt_size)
         self.line = line
-
         self.color = color
+
+        self.birthday = time.time()
 
         self.rect = None
 
     def update(self):
-        written = engine.font.render(self.text, 1, self.color)
-        self.rect = engine.screen.blit(written, dest=(self.x, self.y + self.line * (engine.txt_gap + engine.txt_size)))
-        return self.rect
+        if time.time() - self.birthday > self.duration:
+            if self in engine.temp_texts:
+                engine.temp_texts.remove(self)
+            return False
+        else:
+            Utils.write(self.text, (self.x, self.y + self.line * (engine.txt_gap + engine.txt_size)), self.color)
+            return True
 
 
 # -----------------
@@ -541,7 +513,7 @@ class Engine:
         self.temp_FPS = self.FPS
 
         self.font = pygame.font.Font(self.used_font, self.txt_size)
-        self.texts: list = []
+        self.temp_texts: list[TempText] = []
 
         self.music_volume = 1
 
@@ -561,8 +533,6 @@ class Engine:
 
         self.frequency = self.FPS
         self.latency = None
-
-        self.camera = Camera(5, 5)
 
         self.inputs: dict = {}
 
@@ -620,7 +590,7 @@ class Engine:
                 circle.is_selected = True
                 self.circle_selected = True
                 return None
-        Text(f"Le corps n°{number} n'existe pas", 3)
+        TempText(f"Le corps n°{number} n'existe pas", 3)
         return None
 
     def print_global_info(self, y):
@@ -759,12 +729,16 @@ class Engine:
             }
 
         running = True
+
+        # main loop
         while running:
-            for text in self.texts:
-                if time.time() - text.birthday >= text.duration:
-                    self.texts.remove(text)
-                else:
-                    text.update()
+            if self.screen_mode == "dark":
+                self.screen.fill(BLACK)
+            elif self.screen_mode == "light":
+                self.screen.fill(WHITE)
+
+            # Filtrer les textes expirés en une seule ligne
+            self.temp_texts = [text for text in self.temp_texts if text.update()]
 
             if self.counter == 0 or self.counter == int(self.FPS / 2):
                 self.temp_FPS = self.frequency
@@ -773,9 +747,6 @@ class Engine:
                 self.counter = 0
             else:
                 self.counter += 1
-
-            if self.camera is not None:
-                self.camera.update_visual()
 
             self.frequency = self.get_frequency()
             self.latency = self.get_latency()
@@ -789,12 +760,6 @@ class Engine:
                     break
                 else:
                     self.circle_selected = False
-
-            if self.screen_mode == "dark":
-                self.screen.fill(BLACK)
-
-            elif self.screen_mode == "light":
-                self.screen.fill(WHITE)
 
             if not pygame.mixer.music.get_busy() and self.music is True:
                 try:
