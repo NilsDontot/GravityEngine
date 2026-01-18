@@ -80,7 +80,7 @@ See [ROADMAP.md](ROADMAP.md) for upcoming features and development timeline.
 
 3. **Run the simulation**
 ```bash
-   python src/main.py
+   python src/gravity_engine.py
 ```
 
 ### Manual Installation
@@ -100,7 +100,7 @@ source venv/bin/activate
 pip install pygame
 
 # Run the program
-python src/main.py
+python src/gravity_engine.py
 ```
 
 ## 📁 Project Structure
@@ -108,13 +108,14 @@ python src/main.py
 GravityEngine/
 │
 ├── src/
-│   └── main.py                 # Main program file - run this to start
+│   └── gravity_engine.py                 # Main program file - run this to start
 │
 ├── assets/
+│   ├── icon.ico                # executable icon
 │   ├── font.ttf                # UI font (required)
-│   ├── music1.mp3              # Background music (optional)
-│   ├── music2.mp3              # Background music (optional)
-│   └── music3.mp3              # Background music (optional)
+│   ├── music1.mp3              # Unavaiable (feature in development)
+│   ├── music2.mp3              # Unavaiable (feature in development)
+│   └── music3.mp3              # Unavaiable (feature in development)
 │
 ├── README.md                   # This file
 ├── ROADMAP.md                  # Development roadmap and timeline
@@ -127,7 +128,7 @@ GravityEngine/
 
 | File | Description | Required |
 |------|-------------|----------|
-| `src/main.py` | Main simulation program | ✅ Required |
+| `src/gravity_engine.py` | Main simulation program | ✅ Required |
 | `assets/font.ttf` | UI font file | ✅ Required |
 | `assets/music*.mp3` | Background music files | 🚫 Feature under development |
 | `README.md` | Documentation | 📖 Recommended |
@@ -136,8 +137,8 @@ GravityEngine/
 
 ### File Locations
 
-- **Main executable**: `src/main.py`
-- **Configuration**: Edit parameters in `Engine.__init__()` within `src/main.py`
+- **Main executable**: `src/gravity_engine.py`
+- **Configuration**: Edit parameters in `Engine.__init__()` within `src/gravity_engine.py`
 - **Font**: Place your `.ttf` font file in `assets/font.ttf`
 - **Music**: Place `.mp3` files in `assets/` (if using background music)
 
