@@ -102,6 +102,7 @@ $RECYCLE.BIN/
 # --- Project Specific ---
 # Custom files
 *.bat
+!advanced_build.bat
 /src/GPU_gravity_engine.py
 /src/test.py
 
