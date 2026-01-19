@@ -36,6 +36,8 @@ A real-time N-body gravitational simulation built with Python and Pygame.
 
 Hello, I am 15 years old and I am passionate about programming and physics. That is why I decided in mid-2025 to create a gravity simulator with Python. Here is the result of my work. I am constantly trying to improve it, and I hope you like it.
 
+Every previous changes are avaiable in [ROADMAP.md](ROADMAP.md).
+
 ## 🌌 Overview
 
 Gravity Engine is an interactive physics simulation that allows you to create and observe celestial bodies interacting under Newtonian gravity. Watch bodies orbit, collide, and merge in real-time with adjustable parameters and visualization options.
