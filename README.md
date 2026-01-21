@@ -2,17 +2,17 @@
 
 A real-time N-body gravitational simulation built with Python and Pygame.
 
-**Created by [Nils DONTOT](https://github.com/NilsDontot)**
+**Created by [Nils DONTOT](https://github.com/Nitr0xis)**
 
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Pygame](https://img.shields.io/badge/pygame-2.0+-green.svg)](https://www.pygame.org/)
-[![GitHub](https://img.shields.io/badge/GitHub-NilsDontot-181717?logo=github)](https://github.com/NilsDontot)
+[![GitHub](https://img.shields.io/badge/GitHub-Nitr0xis-181717?logo=github)](https://github.com/Nitr0xis)
 
 ---
 
 **Author:** Nils DONTOT  
-**Repository:** [github.com/NilsDontot/GravityEngine](https://github.com/NilsDontot/GravityEngine)  
+**Repository:** [github.com/Nitr0xis/GravityEngine](https://github.com/Nitr0xis/GravityEngine)  
 **Email:** [nils.dontot.pro@gmail.com](mailto:nils.dontot.pro@gmail.com)
 
 ---
@@ -46,7 +46,7 @@ Gravity Engine is an interactive physics simulation that allows you to create an
 
 The simulation features accurate Newtonian physics with momentum conservation, customizable gravitational constants, and multiple visualization modes. Whether you want to recreate a solar system, observe chaotic three-body problems, or simply experiment with gravitational interactions, Gravity Engine provides an intuitive interface for exploration.
 
-**Developed by Nils DONTOT** - [GitHub Profile](https://github.com/NilsDontot)
+**Developed by Nils DONTOT** - [GitHub Profile](https://github.com/Nitr0xis)
 
 ![Gravity Engine Demo](assets/demo.gif) *(A demo gif will soon be added)*
 
@@ -75,7 +75,7 @@ See [ROADMAP.md](ROADMAP.md) for upcoming features and development timeline.
 
 **For Windows users:**
 
-1. Download `GravityEngine.exe` from the [Releases](https://github.com/NilsDontot/GravityEngine/releases) page
+1. Download `GravityEngine.exe` from the [Releases](https://github.com/Nitr0xis/GravityEngine/releases) page
 2. Double-click to run - no installation needed!
 
 > 💡 **Note**: The executable is self-contained and includes all dependencies. No Python installation required.
@@ -90,7 +90,7 @@ See [ROADMAP.md](ROADMAP.md) for upcoming features and development timeline.
 
 1. **Clone the repository**
 ```bash
-   git clone https://github.com/NilsDontot/GravityEngine.git
+   git clone https://github.com/Nitr0xis/GravityEngine.git
    cd GravityEngine
 ```
 
@@ -561,9 +561,9 @@ See [LICENSE](LICENSE) for the complete legal text.
 **Nils DONTOT**
 
 - 📧 **Email**: [nils.dontot.pro@gmail.com](mailto:nils.dontot.pro@gmail.com)
-- 🐙 **GitHub**: [@NilsDontot](https://github.com/NilsDontot)
-- 🔗 **Repository**: [github.com/NilsDontot/GravityEngine](https://github.com/NilsDontot/GravityEngine)
-- 🌐 **Issues**: [Report bugs or suggest features](https://github.com/NilsDontot/GravityEngine/issues)
+- 🐙 **GitHub**: [@Nitr0xis](https://github.com/Nitr0xis)
+- 🔗 **Repository**: [github.com/Nitr0xis/GravityEngine](https://github.com/Nitr0xis/GravityEngine)
+- 🌐 **Issues**: [Report bugs or suggest features](https://github.com/Nitr0xis/GravityEngine/issues)
 
 ### Get in Touch
 
@@ -654,6 +654,6 @@ Gravity Engine is perfect for:
 
 **⭐ Star this repository if you find it interesting!**
 
-**Made with ❤️ and ☕ by [Nils DONTOT](https://github.com/NilsDontot)**
+**Made with ❤️ and ☕ by [Nils DONTOT](https://github.com/Nitr0xis)**
 
 *Last updated: January 21, 2026*
