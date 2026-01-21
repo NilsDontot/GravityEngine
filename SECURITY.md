@@ -28,7 +28,7 @@ We provide security updates for the following versions:
 | 0.x.x   | ⚠️ Limited support | Bug fixes only |
 | < 0.1   | ❌ No              | Deprecated |
 
-**Current stable version**: Check [releases](https://github.com/NilsDontot/GravityEngine/releases)
+**Current stable version**: Check [releases](https://github.com/Nitr0xis/GravityEngine/releases)
 
 ---
 
@@ -86,7 +86,7 @@ We provide security updates for the following versions:
 **Risk Level**: 🟡 Low to Medium (if downloaded from untrusted sources)
 
 **Mitigation**:
-- ✅ Always download from official [GitHub Releases](https://github.com/NilsDontot/GravityEngine/releases)
+- ✅ Always download from official [GitHub Releases](https://github.com/Nitr0xis/GravityEngine/releases)
 - ✅ Verify source code is identical to published version
 - ✅ Build from source if concerned (see [README.md](README.md))
 - ❌ Never download executables from third-party sites
@@ -174,7 +174,7 @@ pip install pygame  # Don't do this
 #### When Using Executables
 ```bash
 # ✅ GOOD - Download from official releases
-https://github.com/NilsDontot/GravityEngine/releases
+https://github.com/Nitr0xis/GravityEngine/releases
 
 # ❌ BAD - Third-party download sites
 ❌ Do NOT download from random websites
@@ -256,7 +256,7 @@ pygame  # Could pull vulnerable version
 **To ensure you're running trusted code:**
 ```bash
 # 1. Clone from official repository
-git clone https://github.com/NilsDontot/GravityEngine.git
+git clone https://github.com/Nitr0xis/GravityEngine.git
 
 # 2. Verify you're on a tagged release (optional)
 git checkout v1.0.0
@@ -492,11 +492,11 @@ We appreciate responsible security researchers who help keep Gravity Engine safe
 
 **Security Team** (currently just me! 😊):
 - **Email**: [nils.dontot.pro@gmail.com](mailto:nils.dontot.pro@gmail.com)
-- **GitHub**: [@NilsDontot](https://github.com/NilsDontot)
+- **GitHub**: [@Nitr0xis](https://github.com/Nitr0xis)
 - **Response time**: Usually within 48 hours (can take more time, I am in high school)
 
 **For non-security issues**:
-- Use [GitHub Issues](https://github.com/NilsDontot/GravityEngine/issues)
+- Use [GitHub Issues](https://github.com/Nitr0xis/GravityEngine/issues)
 
 ---
 
