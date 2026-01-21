@@ -22,8 +22,9 @@ Controls:
 
 
 import importlib.util
-import random
+import os
 import subprocess
+import random
 import time
 import math
 import sys
@@ -50,6 +51,21 @@ Ideas:
 
 ### add rock limit
 """
+
+
+# ================================================================================================
+# ================================================================================================
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    
+    return os.path.join(base_path, relative_path)
+
 
 
 # -----------------
@@ -493,7 +509,7 @@ class Engine:
         pygame.display.set_caption('Gravity Engine')
         
         # ==================== UI SETTINGS ====================
-        self.used_font = 'assets/font.ttf'
+        self.used_font = resource_path('assets/font.ttf')
         self.txt_size = 30
         self.txt_gap: int = 15
         self.font = pygame.font.Font(self.used_font, self.txt_size)
@@ -526,6 +542,7 @@ class Engine:
         self.random_environment_number: int = 20
         
         # ==================== AUDIO SETTINGS ====================
+        self.musics_folder_path = resource_path('assets/musics')
         self.music = False
         self.music_volume = 1
         
@@ -721,9 +738,9 @@ class Engine:
         """Handle background music playback."""
         if not pygame.mixer.music.get_busy() and self.music is True:
             try:
-                pygame.mixer.music.load('assets/music1.mp3')
-                pygame.mixer.music.queue('assets/music2.mp3')
-                pygame.mixer.music.queue('assets/music3.mp3')
+                pygame.mixer.music.load(f'{self.musics_folder_path}/music1.mp3')
+                pygame.mixer.music.queue(f'{self.musics_folder_path}/music2.mp3')
+                pygame.mixer.music.queue(f'{self.musics_folder_path}/music3.mp3')
             except FileNotFoundError:
                 pass
             pygame.mixer.music.play(loop, start, fade_ms)
