@@ -50,7 +50,7 @@ cls
 echo.
 echo  Building Development Version...
 echo.
-call build.bat
+call builders\build.bat
 if errorlevel 1 (
     echo.
     echo  [ERROR] Development build failed!
@@ -74,7 +74,7 @@ cls
 echo.
 echo  Building Release Version...
 echo.
-call build_release.bat
+call builders\build_release.bat
 if errorlevel 1 (
     echo.
     echo  [ERROR] Release build failed!
@@ -98,7 +98,7 @@ cls
 echo.
 echo  Cleaning Build Files...
 echo.
-call clean.bat
+call builders\clean.bat
 pause
 goto menu
 
@@ -107,11 +107,11 @@ cls
 echo.
 echo  Clean + Build Release...
 echo.
-call clean.bat
+call builders\clean.bat
 echo.
 echo  ---
 echo.
-call build_release.bat
+call builders\build_release.bat
 if errorlevel 1 (
     echo.
     echo  [ERROR] Build failed!
