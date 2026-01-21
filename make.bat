@@ -130,7 +130,7 @@ echo  Running from source (Python)...
 echo.
 echo  ================================================
 echo.
-python src/gravity_engine
+python src/gravity_engine.py
 echo.
 echo  ================================================
 echo.
@@ -250,20 +250,20 @@ exit
 
 ---
 
-## 📋 Fichiers créés
+## 📋 Created Files
 
-Voici ce que vous devez avoir à la racine de votre projet :
+This is what you must have in the root of your project :
 ```
 GravityEngine/
 ├── src/
 │   └── gravity_engine.py
 ├── assets/
 │   ├── font.ttf
-│   └── icon.ico (optionnel)
-├── build.bat          ✅ Nouveau
-├── build_release.bat  ✅ Nouveau
-├── clean.bat          ✅ Nouveau
-├── make.bat           ✅ Nouveau
+│   └── icon.ico (recommended)
+├── build.bat
+├── build_release.bat
+├── clean.bat
+├── make.bat
 ├── README.md
 ├── ROADMAP.md
 ├── LICENSE
