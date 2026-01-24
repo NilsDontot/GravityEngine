@@ -509,7 +509,7 @@ class Engine:
         pygame.display.set_caption('Gravity Engine')
         
         # ==================== UI SETTINGS ====================
-        self.used_font = resource_path('assets/font.ttf')
+        self.used_font = resource_path(r'..\assets\font.ttf')
         self.txt_size = 30
         self.txt_gap: int = 15
         self.font = pygame.font.Font(self.used_font, self.txt_size)
@@ -542,7 +542,7 @@ class Engine:
         self.random_environment_number: int = 20
         
         # ==================== AUDIO SETTINGS ====================
-        self.musics_folder_path = resource_path('assets/musics')
+        self.musics_folder_path = resource_path(r'..\assets\musics')
         self.music = False
         self.music_volume = 1
         
