@@ -18,6 +18,10 @@ Controls:
     - Left/Right/Wheel click -> hold to create bodies
                              -> select/deselect a body
     - Delete -> Delete selected body
+
+Parameters:
+    All parameters can be edit in Engine.__init__().
+    For file paths, consider that you need to write file paths from project root.
 """
 
 
@@ -57,15 +61,32 @@ Ideas:
 # ================================================================================================
 
 def resource_path(relative_path):
-    """Get absolute path to resource, works for dev and PyInstaller"""
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-    
-    return os.path.join(base_path, relative_path)
+    """
+    Get absolute path to resource, works for dev and PyInstaller.
 
+    Args:
+        relative_path: Path from project root (e.g., 'assets/font.ttf')
+
+    Returns:
+        Absolute path to the resource
+
+    Examples:
+        > resource_path('assets/font.ttf')
+        'C:/Projects/GravityEngine/assets/font.ttf'  # Dev
+        'C:/Users/.../Temp/_MEI123/assets/font.ttf'  # PyInstaller
+    """
+    try:
+        # PyInstaller mode: _MEIPASS is the extracted temp folder
+        base_path = sys._MEIPASS
+    except AttributeError:
+        # Development mode: go from src/ to project root
+        # __file__ = C:/GravityEngine/src/gravity_engine.py
+        # dirname once = C:/GravityEngine/src
+        # dirname twice = C:/GravityEngine (project root)
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    # Normalize and join
+    return os.path.join(base_path, os.path.normpath(relative_path))
 
 
 # -----------------
@@ -509,7 +530,7 @@ class Engine:
         pygame.display.set_caption('Gravity Engine')
         
         # ==================== UI SETTINGS ====================
-        self.used_font = resource_path(r'..\assets\font.ttf')
+        self.used_font = resource_path('assets/font.ttf')
         self.txt_size = 30
         self.txt_gap: int = 15
         self.font = pygame.font.Font(self.used_font, self.txt_size)
@@ -542,7 +563,7 @@ class Engine:
         self.random_environment_number: int = 20
         
         # ==================== AUDIO SETTINGS ====================
-        self.musics_folder_path = resource_path(r'..\assets\musics')
+        self.musics_folder_path = resource_path('assets/musics')
         self.music = False
         self.music_volume = 1
         
