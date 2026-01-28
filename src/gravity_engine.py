@@ -21,7 +21,7 @@ Controls:
 
 Parameters:
     All parameters can be edit in Engine.__init__().
-    For file paths, consider that you need to write file paths from project root.
+    For file paths, consider that you need to write file paths from project's root.
 """
 
 
