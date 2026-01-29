@@ -63,8 +63,8 @@ Ideas:
 """
 
 
-# ================================================================================================
-# ================================================================================================
+# ==================================================================================
+# ==================================================================================
 
 def resource_path(relative_path):
     """
@@ -173,14 +173,14 @@ class Circle:
     Each Circle object has physical properties (mass, radius, position, velocity)
     and can interact with other bodies through gravitational forces.
     """
-    def __init__(self, x, y, radius, mass):
+    def __init__(self, x, y, density, mass):
         """
         Initialize a new celestial body.
         
         Args:
             x: Initial x-coordinate position
             y: Initial y-coordinate position
-            radius: Initial radius (will be recalculated from mass)
+            density: Density of the body (mass per unit volume)
             mass: Mass of the body (determines size and gravitational influence)
         """
         super().__init__()
@@ -201,10 +201,19 @@ class Circle:
         self.basic_mass = mass  # Original mass (before fusion)
         self.mass = self.basic_mass  # Current mass (may change after fusion)
 
-        # Radius calculation: radius is proportional to cube root of mass
-        # This assumes constant density (volume ∝ mass, radius ∝ mass^(1/3))
-        self.radius = radius
-        self.radius = self.mass ** (1 / 3)
+        # Density property (mass per unit volume)
+        self.density = float(density)
+
+        # Radius calculation from mass and density
+        # Volume = mass / density
+        # Volume = (4/3) * π * r³
+        # Therefore: r = ((3 * mass) / (4 * π * density))^(1/3)
+        if self.density > 0:
+            volume = self.mass / self.density
+            self.radius = cbrt((3 * volume) / (4 * math.pi))
+        else:
+            # Fallback to default calculation if density is invalid
+            self.radius = cbrt(self.mass)
 
         # Geometric properties
         self.surface = 4 * self.radius ** 2 * math.pi  # Surface area of sphere
@@ -299,6 +308,9 @@ class Circle:
                 print(f"WARNING: Circle {self.number} had invalid radius, reset to 1")
         # -----------------------
 
+        # Calculate visible radius (minimum 1 pixel for visibility)
+        visible_radius = max(1, int(self.radius))
+
         # Selection highlighting logic
         if self.full_selected_mode:
             # Full selection mode: change body color when selected
@@ -315,29 +327,29 @@ class Circle:
             if self.is_selected:
                 # Draw selection outline (green circle slightly larger than body)
                 # Outline size scales with body radius for visibility
-                if self.radius <= 4:
+                if visible_radius <= 4:
                     pygame.draw.circle(screen, DUCKY_GREEN, (int(self.x), int(self.y)),
-                                       int(self.radius) + 1 + 1)
-                elif self.radius <= 20:
+                                       visible_radius + 1 + 1)
+                elif visible_radius <= 20:
                     pygame.draw.circle(screen, DUCKY_GREEN, (int(self.x), int(self.y)),
-                                       int(self.radius) + self.radius / 4 + 1)
+                                       visible_radius + visible_radius // 4 + 1)
                 else:
                     pygame.draw.circle(screen, DUCKY_GREEN, (int(self.x), int(self.y)),
-                                       int(self.radius) + 4 + 1)
+                                       visible_radius + 4 + 1)
 
         # Draw shadow/outline for unselected bodies (for depth effect)
         if not self.is_selected:
             # Draw dark grey outline behind body for visual depth
-            if self.radius <= 4:
-                pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)), int(self.radius) + 1)
-            elif self.radius <= 20:
+            if visible_radius <= 4:
+                pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)), visible_radius + 1)
+            elif visible_radius <= 20:
                 pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)),
-                                   int(self.radius) + self.radius / 5)
+                                   visible_radius + visible_radius // 5)
             else:
-                pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)), int(self.radius) + 3)
+                pygame.draw.circle(screen, DARK_GREY, (int(self.x), int(self.y)), visible_radius + 3)
 
         # Draw the main body circle
-        self.rect = pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), int(self.radius))
+        self.rect = pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), visible_radius)
 
         """
         # Debug tool:
@@ -727,9 +739,15 @@ class Circle:
         self.vx = (self.vx * self.mass + other.vx * other.mass) / total_mass
         self.vy = (self.vy * self.mass + other.vy * other.mass) / total_mass
 
-        # Update mass and radius (radius = cube root of mass for constant density)
+        # Update mass and recalculate radius from density
         self.mass = total_mass
-        self.radius = cbrt(self.mass)
+        # Recalculate radius from new mass and density
+        if self.density > 0:
+            volume = self.mass / self.density
+            self.radius = ((3 * volume) / (4 * math.pi)) ** (1 / 3)
+        else:
+            # Fallback to default calculation if density is invalid
+            self.radius = self.mass ** (1 / 3)
 
         # Mark other body for removal
         other.suicide = True
@@ -810,10 +828,14 @@ class Engine:
         self.gravity: float = self.default_gravity
         self.fusions = True
         
+        # Default density for new bodies (mass per unit volume)
+        # This determines how large a body will be for a given mass
+        self.default_density = 1.0
+        
         # ==================== SIMULATION SETTINGS ====================
         self.FPS = 120
-        self.speed = 1_000_000_00  # Time acceleration factor
-        self.growing_speed = 0.5   # Body growth speed when creating
+        self.speed = 50_000_000  # Time acceleration factor
+        self.growing_speed = 0.1   # Body growth speed when creating
         
         # ==================== VISUALIZATION SETTINGS ====================
         self.vectors_printed = False
@@ -860,6 +882,7 @@ class Engine:
         
         # Mouse interaction state
         self.mouse_down = False
+        self.mouse_down_start_time = None  # Timestamp when mouse button was pressed
         self.can_create_circle = True
         self.circle_collided = False
         self.collision_detected = False
@@ -1078,10 +1101,10 @@ class Engine:
         # Use configured number of bodies instead of parameter
         count = self.random_environment_number
         for c in range(count):
-            # Create body at random position with small default size
+            # Create body at random position with default mass and density
             new = Circle(x=random.uniform(0, self.screen.get_width()),
                          y=random.uniform(0, self.screen.get_height()),
-                         radius=0.1,
+                         density=self.default_density,
                          mass=1)
             circles.append(new)
 
@@ -1157,6 +1180,7 @@ class Engine:
         # Initialize mouse interaction state
         self.temp_circle = None
         self.mouse_down = False
+        self.mouse_down_start_time = None
 
         # Create clock for FPS control
         clock = pygame.time.Clock()
@@ -1243,9 +1267,28 @@ class Engine:
 
             # Handle mouse button hold behavior (body creation)
             if self.mouse_down and self.temp_circle:
-                # Grow the temporary body while mouse is held
-                self.temp_circle.radius += self.growing_speed * 100 * (1 / self.frequency)
-                self.temp_circle.mass = self.temp_circle.radius ** 3
+                # Calculate time elapsed since mouse button was pressed
+                if self.mouse_down_start_time is not None:
+                    time_held = time.time() - self.mouse_down_start_time
+                else:
+                    time_held = 0
+                    self.mouse_down_start_time = time.time()
+                
+                # Increase radius linearly for user experience
+                # Accelerate growth speed based on time held (exponential acceleration)
+                # Base speed increases exponentially with time to make large bodies faster to create
+                acceleration_factor = math.exp(time_held * 0.8)  # True exponential growth that constantly increases
+                radius_increase = self.growing_speed * 100 * (1 / self.frequency) * acceleration_factor
+                self.temp_circle.radius += radius_increase
+                
+                # Recalculate mass from radius and density to maintain consistency
+                # Volume = (4/3) * π * r³, so mass = density * volume
+                if self.temp_circle.density > 0:
+                    volume = (4 / 3) * math.pi * (self.temp_circle.radius ** 3)
+                    self.temp_circle.mass = self.temp_circle.density * volume
+                else:
+                    # Fallback to default calculation if density is invalid
+                    self.temp_circle.mass = self.temp_circle.radius ** 3
                 
                 # Check for collision with existing bodies
                 self.collision_detected = False
@@ -1259,6 +1302,7 @@ class Engine:
                     circles.append(self.temp_circle)
                     self.temp_circle = None
                     self.mouse_down = False
+                    self.mouse_down_start_time = None
 
             # Remove bodies marked for deletion (after fusion)
             for circle in circles:
@@ -1391,6 +1435,7 @@ class ActionManager:
         engine.circle_collided = None
         engine.can_create_circle = False
         engine.mouse_down = True
+        engine.mouse_down_start_time = time.time()  # Record when click started
         x, y = pygame.mouse.get_pos()
 
         if len(circles) > 0:
@@ -1400,7 +1445,9 @@ class ActionManager:
                 dx = fabs(x - circle.x)
                 dy = fabs(y - circle.y)
                 dist = sqrt(dx ** 2 + dy ** 2)
-                click_on_circle: bool = dist <= circle.radius
+                # Use visible radius (minimum 1 pixel) for click detection
+                visible_radius = max(1, int(circle.radius))
+                click_on_circle: bool = dist <= visible_radius
 
                 if click_on_circle:
                     # Click is on a body - prepare for selection
@@ -1428,11 +1475,11 @@ class ActionManager:
 
             # Create temporary body if allowed
             if engine.can_create_circle:
-                engine.temp_circle = Circle(x, y, 3, 1)
+                engine.temp_circle = Circle(x, y, engine.default_density, 1)
                 engine.can_create_circle = False
         else:
             # No bodies exist - always create new one
-            engine.temp_circle = Circle(x, y, 3, 1)
+            engine.temp_circle = Circle(x, y, engine.default_density, 1)
 
     @staticmethod
     def handle_mouse_button_up(event: pygame.event):
@@ -1445,6 +1492,7 @@ class ActionManager:
             event: Pygame mouse button event
         """
         engine.mouse_down = False
+        engine.mouse_down_start_time = None
         # Finalize body creation if temporary body exists
         if engine.temp_circle is not None:
             circles.append(engine.temp_circle)
