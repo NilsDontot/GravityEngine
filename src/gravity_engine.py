@@ -210,14 +210,14 @@ class Circle:
         # Therefore: r = ((3 * mass) / (4 * π * density))^(1/3)
         if self.density > 0:
             volume = self.mass / self.density
-            self.radius = cbrt((3 * volume) / (4 * math.pi))
+            self.radius = cbrt((3 * volume) / (4 * pi))
         else:
             # Fallback to default calculation if density is invalid
             self.radius = cbrt(self.mass)
 
         # Geometric properties
-        self.surface = 4 * self.radius ** 2 * math.pi  # Surface area of sphere
-        self.volume = 4 / 3 * math.pi * self.radius ** 3  # Volume of sphere
+        self.surface = 4 * self.radius ** 2 * pi  # Surface area of sphere
+        self.volume = 4 / 3 * pi * self.radius ** 3  # Volume of sphere
 
         # Rendering properties
         self.rect = None  # Pygame rectangle for collision detection
@@ -439,7 +439,7 @@ class Circle:
             in_terminal: If True, also print vector info to console
         """
         # Calculate force magnitude
-        force = math.sqrt(self.force[0] ** 2 + self.force[1] ** 2)
+        force = sqrt(self.force[0] ** 2 + self.force[1] ** 2)
         
         # Calculate scaling coefficient for visualization
         # Uses cube root to compress large force values for display
@@ -449,8 +449,8 @@ class Circle:
             coefficient = 0
 
         # Calculate vector end point with scaling
-        vector_x = self.force[0] * coefficient * engine.vector_length * (math.sqrt(engine.speed) / 8)
-        vector_y = self.force[1] * coefficient * engine.vector_length * (math.sqrt(engine.speed) / 8)
+        vector_x = self.force[0] * coefficient * engine.vector_length * (sqrt(engine.speed) / 8)
+        vector_y = self.force[1] * coefficient * engine.vector_length * (sqrt(engine.speed) / 8)
         end_coordinates = (self.x + vector_x, self.y + vector_y)
 
         if in_terminal:
@@ -530,7 +530,7 @@ class Circle:
         Utils.write(text, (20, y - 20), BLUE, 7)
 
         # Net force magnitude (in newtons)
-        force_magnitude = math.sqrt(self.printed_force[0] ** 2 + self.printed_force[1] ** 2)
+        force_magnitude = sqrt(self.printed_force[0] ** 2 + self.printed_force[1] ** 2)
         text = f"Force applied : {force_magnitude:.2e} N"
         Utils.write(text, (20, y - 20), BLUE, 8)
 
@@ -664,7 +664,7 @@ class Circle:
             # Apply random initial velocity if random mode enabled
             # Velocity is based on kinetic energy: E = 0.5*m*v², so v = sqrt(2*E/m)
             if engine.random_mode:
-                max_velocity = math.sqrt(2 * engine.random_field / self.mass)
+                max_velocity = sqrt(2 * engine.random_field / self.mass)
                 self.vx = random.uniform(-max_velocity, max_velocity)
                 self.vy = random.uniform(-max_velocity, max_velocity)
 
@@ -675,8 +675,8 @@ class Circle:
             self.age = engine.net_age() - self.birth_time
 
         # Update geometric properties based on current radius
-        self.surface = 4 * self.radius ** 2 * math.pi  # Surface area
-        self.volume = 4 / 3 * math.pi * self.radius ** 3  # Volume
+        self.surface = 4 * self.radius ** 2 * pi  # Surface area
+        self.volume = 4 / 3 * pi * self.radius ** 3  # Volume
 
         # Deselect if body is removed from simulation
         if not self in circles:
@@ -744,7 +744,7 @@ class Circle:
         # Recalculate radius from new mass and density
         if self.density > 0:
             volume = self.mass / self.density
-            self.radius = ((3 * volume) / (4 * math.pi)) ** (1 / 3)
+            self.radius = ((3 * volume) / (4 * pi)) ** (1 / 3)
         else:
             # Fallback to default calculation if density is invalid
             self.radius = self.mass ** (1 / 3)
@@ -1366,14 +1366,14 @@ class Engine:
                 # Increase radius linearly for user experience
                 # Accelerate growth speed based on time held (exponential acceleration)
                 # Base speed increases exponentially with time to make large bodies faster to create
-                acceleration_factor = math.exp(time_held * 0.8)  # True exponential growth that constantly increases
+                acceleration_factor = exp(time_held * 0.8)  # True exponential growth that constantly increases
                 radius_increase = self.growing_speed * 100 * (1 / self.frequency) * acceleration_factor
                 self.temp_circle.radius += radius_increase
                 
                 # Recalculate mass from radius and density to maintain consistency
                 # Volume = (4/3) * π * r³, so mass = density * volume
                 if self.temp_circle.density > 0:
-                    volume = (4 / 3) * math.pi * (self.temp_circle.radius ** 3)
+                    volume = (4 / 3) * pi * (self.temp_circle.radius ** 3)
                     self.temp_circle.mass = self.temp_circle.density * volume
                 else:
                     # Fallback to default calculation if density is invalid
