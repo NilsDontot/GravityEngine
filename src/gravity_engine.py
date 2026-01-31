@@ -6,7 +6,7 @@ Copyright (c) 2026 Nils DONTOT
 Email: nils.dontot.pro@gmail.com
 GitHub account: https://github.com/Nitr0xis/
 GitHub repository: https://github.com/Nitr0xis/GravityEngine/
-LICENCE: https://creativecommons.org/licenses/by-nc-sa/4.0/ or https://github.com/Nitr0xis/GravityEngine/blob/main/LICENSE, Creative Commons BY-NC-SA 4.0 License
+LICENCE: https://creativecommons.org/licenses/by-nc-sa/4.0/, Creative Commons BY-NC-SA 4.0 License
 README: https://github.com/Nitr0xis/GravityEngine/blob/main/README.md
 
 Controls:
