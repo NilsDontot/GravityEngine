@@ -6,7 +6,7 @@ Copyright (c) 2026 Nils DONTOT
 Email: nils.dontot.pro@gmail.com
 GitHub account: https://github.com/Nitr0xis/
 GitHub repository: https://github.com/Nitr0xis/GravityEngine/
-LICENCE: https://github.com/Nitr0xis/GravityEngine/blob/main/LICENSE, Creative Commons BY-NC-SA 4.0 License
+LICENCE: https://creativecommons.org/licenses/by-nc-sa/4.0/ or https://github.com/Nitr0xis/GravityEngine/blob/main/LICENSE, Creative Commons BY-NC-SA 4.0 License
 README: https://github.com/Nitr0xis/GravityEngine/blob/main/README.md
 
 Controls:
@@ -31,7 +31,6 @@ import os  # For file system operations
 import subprocess  # For installing missing modules
 import random  # For random number generation
 import time  # For time tracking and delays
-import math  # For mathematical operations
 import sys  # For system-specific parameters and functions
 
 # Import all math functions for convenience (sqrt, sin, cos, atan2, etc.)
