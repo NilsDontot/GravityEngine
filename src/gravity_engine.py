@@ -512,8 +512,8 @@ class Circle:
             text = f"Age : {round(age_years * 10) / 10} years"
             Utils.write(text, (20, y - 20), BLUE, 2)
 
-        # Mass (in tons)
-        text = f"Mass : {self.mass:.2e} t"
+        # Mass (in kilograms)
+        text = f"Mass : {self.mass:.2e} kg"
         Utils.write(text, (20, y - 20), BLUE, 3)
 
         # Radius (in meters)
@@ -524,14 +524,18 @@ class Circle:
         text = f"Volume : {self.volume:.2e} m³"
         Utils.write(text, (20, y - 20), BLUE, 5)
 
+        # Density (in kilograms by cubic meters)
+        text = f"Density : {self.density:.2e} kg/m³"
+        Utils.write(text, (20, y - 20), BLUE, 6)
+
         # Kinetic energy (in joules)
         text = f"Kinetic energy : {self.kinetic_energy():.2e} J"
-        Utils.write(text, (20, y - 20), BLUE, 7)
+        Utils.write(text, (20, y - 20), BLUE, 8)
 
         # Net force magnitude (in newtons)
         force_magnitude = sqrt(self.printed_force[0] ** 2 + self.printed_force[1] ** 2)
         text = f"Force applied : {force_magnitude:.2e} N"
-        Utils.write(text, (20, y - 20), BLUE, 8)
+        Utils.write(text, (20, y - 20), BLUE, 9)
 
         # Velocity magnitude (in m/s)
         text = f"Velocity : {self.speed:.2e} m/s"
@@ -545,10 +549,10 @@ class Circle:
         nearest_tuple = self.get_nearest()
         if nearest_tuple is not None:
             text = f"Nearest body : n°{nearest_tuple[0]} -> {round(nearest_tuple[1]):.2e} m"
-            Utils.write(text, (20, y - 20), BLUE, 13)
+            Utils.write(text, (20, y - 20), BLUE, 12)
         else:
             text = f"Nearest body : None"
-            Utils.write(text, (20, y - 20), BLUE, 13)
+            Utils.write(text, (20, y - 20), BLUE, 12)
 
     def reset_force_list(self):
         """Clear the list of gravitational forces from other bodies."""
@@ -829,7 +833,7 @@ class Engine:
         
         # Default density for new bodies (mass per unit volume)
         # This determines how large a body will be for a given mass
-        self.default_density = 1.0
+        self.default_density = 5.515  # 1.0 <=> 1000 kg/m^3, by default on 5.515 (Earth density)
         
         # ==================== SIMULATION SETTINGS ====================
         self.FPS = 120
@@ -1008,7 +1012,7 @@ class Engine:
         # Display heaviest body information
         heaviest_tuple = Utils.heaviest()
         if heaviest_tuple is not None:
-            text = f"Heaviest body : n°{heaviest_tuple[0]} -> {heaviest_tuple[1] / 1000:.2e} t"
+            text = f"Heaviest body : n°{heaviest_tuple[0]} -> {heaviest_tuple[1] / 1000:.2e} kg"
             Utils.write(text, (20, y), BLUE, 2)
         else:
             text = f"Heaviest body : None"
@@ -1063,7 +1067,7 @@ class Engine:
         Utils.write(text, (20, y), BLUE, 0)
 
         # Display total mass (top left)
-        text = f"Total mass : {round(Utils.mass_sum() / 1000) / 1000} kt"
+        text = f"Total mass : {round(Utils.mass_sum()):.2e} kg"
         Utils.write(text, (20, y), BLUE, 1)
 
         # Display oldest body information (top left)
