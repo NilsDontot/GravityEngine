@@ -414,8 +414,8 @@ class Circle:
 
         # End point calculated from velocity components
         # Scaling factor 17.5 adjusts vector visibility
-        x2 = self.vector_length * (self.x + self.vx * 17.5 * engine.speed)
-        y2 = self.vector_length * (self.y + self.vy * 17.5 * engine.speed)
+        x2 = self.vector_length * (self.x + self.vx * 17.5 * engine.time_acceleration)
+        y2 = self.vector_length * (self.y + self.vy * 17.5 * engine.time_acceleration)
 
         if in_terminal:
             print(f"N{self.number} Start : ({x1}; {y1}); End : ({x2}; {y2})")
@@ -448,8 +448,8 @@ class Circle:
             coefficient = 0
 
         # Calculate vector end point with scaling
-        vector_x = self.force[0] * coefficient * engine.vector_length * (sqrt(engine.speed) / 8)
-        vector_y = self.force[1] * coefficient * engine.vector_length * (sqrt(engine.speed) / 8)
+        vector_x = self.force[0] * coefficient * engine.vector_length * (sqrt(engine.time_acceleration) / 8)
+        vector_y = self.force[1] * coefficient * engine.vector_length * (sqrt(engine.time_acceleration) / 8)
         end_coordinates = (self.x + vector_x, self.y + vector_y)
 
         if in_terminal:
@@ -504,7 +504,7 @@ class Circle:
 
         # Age display (converted from simulation time to years)
         # 31,557,600 = seconds in a year
-        age_years = self.age * engine.speed / 31_557_600
+        age_years = self.age * engine.time_acceleration / 31_557_600
         if age_years < 2:
             text = f"Age : {round(age_years * 10) / 10} year"
             Utils.write(text, (20, y - 20), BLUE, 2)
@@ -690,8 +690,8 @@ class Circle:
 
         # Update position based on velocity
         # Position change = velocity * time_factor, corrected for frame rate
-        self.x += self.correct_latency(self.vx * engine.speed)
-        self.y += self.correct_latency(self.vy * engine.speed)
+        self.x += self.correct_latency(self.vx * engine.time_acceleration)
+        self.y += self.correct_latency(self.vy * engine.time_acceleration)
 
         # Update position tuple
         self.pos = (self.x, self.y)
@@ -825,7 +825,7 @@ class Engine:
 
         # ==================== SIMULATION SETTINGS ====================
         self.FPS = 120
-        self.speed = 50_000  # Time acceleration factor
+        self.time_acceleration = 1e4  # Time acceleration factor
         self.growing_speed = 0.1   # Body growth speed when creating
         
         # ==================== UI SETTINGS ====================
@@ -1057,7 +1057,7 @@ class Engine:
         Utils.write(text, (self.screen.get_width() - 20 - (self.font.size(text)[0]), y), BLUE, 4)
 
         # Display time acceleration factor (bottom right)
-        text = f"Time factor : ×{self.speed:.2e}"
+        text = f"Time factor : ×{self.time_acceleration:.2e}"
         Utils.write(text, (self.screen.get_width() - 20 - (self.font.size(text)[0]),
                           self.screen.get_height() - 20 - 2 * self.txt_size - self.txt_gap), BLUE, 0)
 
@@ -1081,7 +1081,7 @@ class Engine:
         oldest_tuple = Utils.oldest()
         if oldest_tuple is not None:
             # Convert age to years (31,557,600 seconds per year)
-            oldest_age_years = oldest_tuple[1] * engine.speed / 31_557_600
+            oldest_age_years = oldest_tuple[1] * engine.time_acceleration / 31_557_600
             if oldest_age_years < 2:
                 text = f"Oldest body : n°{oldest_tuple[0]} -> {int(oldest_age_years * 10) / 10} year"
                 Utils.write(text, (20, y), BLUE, 3)
@@ -1093,7 +1093,7 @@ class Engine:
             Utils.write(text, (20, y), BLUE, 3)
 
         # Display simulation age (bottom left)
-        sim_age_years = self.net_age() * engine.speed / 31_557_600
+        sim_age_years = self.net_age() * engine.time_acceleration / 31_557_600
         if sim_age_years < 2:
             text = f"Simulation age : {int(sim_age_years * 10) / 10} year"
             Utils.write(text, (20, self.screen.get_height() - 20 - engine.txt_size), BLUE, 0)
