@@ -825,7 +825,7 @@ class Engine:
 
         # ==================== SIMULATION SETTINGS ====================
         self.FPS = 120
-        self.speed = 100_000  # Time acceleration factor
+        self.speed = 50_000  # Time acceleration factor
         self.growing_speed = 0.1   # Body growth speed when creating
         
         # ==================== UI SETTINGS ====================
@@ -839,7 +839,7 @@ class Engine:
         self.temp_texts: list[TempText] = []
         
         # ==================== PHYSICS SETTINGS ====================
-        self.G = 6.6743 * 10 ** -11
+        self.G = 6.6743e-11
         self.default_gravity = self.G
         self.gravity: float = self.default_gravity
         self.fusions = True
