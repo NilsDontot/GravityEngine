@@ -99,6 +99,28 @@ def resource_path(relative_path):
     return os.path.join(base_path, os.path.normpath(relative_path))
 
 
+# Test unitaire
+def test_force_summation():
+    """Check if the forces are properly summed, not averaged."""
+    # Create a body
+    body = Circle(x=500, y=500, density=5515, mass=1e20)
+    
+    # Simulate 3 identical forces
+    body.attract_forces = [
+        (10.0, 0.0),
+        (10.0, 0.0),
+        (10.0, 0.0)
+    ]
+    
+    # Calculate the resulting force
+    body.update()
+    
+    # Verify that the force is 30, not 10
+    assert body.force[0] == 30.0, f"Force should be 30, got {body.force[0]}"
+    assert body.force[1] == 0.0
+    print("Test force summation successful")
+
+
 # -----------------
 # class TempText
 # -----------------
